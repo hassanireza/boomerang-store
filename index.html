@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="BOOMR. - The world's finest boomerangs. Traditional, novelty, indoor and competition-grade boomerangs crafted for precision and beauty."/>
+  <meta name="keywords" content="boomerangs, buy boomerangs, competition boomerang, indoor boomerang, traditional boomerang"/>
+  <meta property="og:title" content="BOOMR. - World's Finest Boomerangs"/>
+  <meta property="og:description" content="Precision-crafted boomerangs for every skill level. Shop 11 unique styles."/>
+  <meta property="og:type" content="website"/>
+  <title>BOOMR. - World's Finest Boomerangs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- Skip link for accessibility -->
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<!-- Custom cursor -->
+<div class="cursor" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<!-- Loading screen -->
+<div id="loading-screen" role="status" aria-label="Loading">
+  <div class="loader-logo">BOOMR<span>.</span></div>
+  <svg class="loader-boomerang" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e8a020"/><stop offset="100%" stop-color="#b07a10"/></linearGradient></defs>
+    <path d="M12 64 L40 16 L68 64 L60 64 L40 30 L20 64Z" fill="url(#lg)"/>
+  </svg>
+  <div class="loader-progress"><div class="loader-bar"></div></div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<!-- Overlay -->
+<div id="overlay" class="overlay"></div>
+
+<!-- ===================== CART PANEL ===================== -->
+<aside id="cart-panel" class="side-panel" role="dialog" aria-label="Shopping cart" aria-modal="true">
+  <div class="panel-header">
+    <h2 class="panel-title">Your Cart</h2>
+    <button class="panel-close" onclick="closeCart()" aria-label="Close cart">&#10005;</button>
+  </div>
+  <div class="panel-body" id="cart-body"></div>
+  <div class="panel-footer" id="cart-footer" style="display:none"></div>
+</aside>
+
+<!-- ===================== WISHLIST PANEL ===================== -->
+<aside id="wishlist-panel" class="side-panel" role="dialog" aria-label="Wishlist" aria-modal="true">
+  <div class="panel-header">
+    <h2 class="panel-title">Wishlist</h2>
+    <button class="panel-close" onclick="closeWishlist()" aria-label="Close wishlist">&#10005;</button>
+  </div>
+  <div class="panel-body" id="wishlist-body"></div>
+</aside>
+
+<!-- ===================== SEARCH OVERLAY ===================== -->
+<div id="search-overlay" class="search-overlay" role="dialog" aria-label="Search" aria-modal="true">
+  <button class="search-close" onclick="closeSearch()" aria-label="Close search">&#10005;</button>
+  <div class="search-input-wrapper">
+    <input id="search-input" class="search-main-input" type="search" placeholder="Search boomerangs..." autocomplete="off" aria-label="Search products"/>
+    <button class="search-submit" onclick="doSearch()" aria-label="Submit search">&#128269;</button>
+  </div>
+  <div class="search-tags">
+    <span class="search-tag" onclick="doSearch('traditional')">Traditional</span>
+    <span class="search-tag" onclick="doSearch('indoor')">Indoor</span>
+    <span class="search-tag" onclick="doSearch('competition')">Competition</span>
+    <span class="search-tag" onclick="doSearch('beginner')">Beginner</span>
+    <span class="search-tag" onclick="doSearch('novelty')">Novelty</span>
+    <span class="search-tag" onclick="doSearch('ring')">Ring</span>
+    <span class="search-tag" onclick="doSearch('gift')">Gifts</span>
+  </div>
+  <div id="search-results" style="margin-top:32px;max-width:700px;width:100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px"></div>
+</div>
+
+<!-- ===================== LOGIN MODAL ===================== -->
+<div id="login-modal" class="modal-overlay" role="dialog" aria-label="Sign in" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close" onclick="closeLogin()" aria-label="Close">&#10005;</button>
+    <div class="modal-logo">
+      <span style="font-family:var(--ff-display);font-weight:800;font-size:1.3rem;letter-spacing:-0.03em">BOOMR<span style="color:var(--ochre)">.</span></span>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-tab="login" onclick="switchLoginTab('login')">Sign In</button>
+      <button class="modal-tab" data-tab="register" onclick="switchLoginTab('register')">Create Account</button>
+    </div>
+    <!-- Login form -->
+    <div id="login-form">
+      <div class="social-login">
+        <button class="social-btn" onclick="showToast('Coming soon','Google sign-in launching soon','info')">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+        <button class="social-btn" onclick="showToast('Coming soon','Apple sign-in launching soon','info')">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><path d="M14.257 9.553c-.023-2.565 2.095-3.805 2.188-3.862-1.194-1.745-3.05-1.984-3.715-2.012-1.58-.16-3.089.928-3.892.928-.803 0-2.045-.9-3.366-.876-1.73.025-3.33 1.007-4.22 2.554-1.8 3.115-.462 7.73 1.294 10.26.862 1.232 1.887 2.613 3.233 2.563 1.298-.05 1.793-.838 3.366-.838 1.572 0 2.019.838 3.39.811 1.4-.025 2.282-1.257 3.135-2.494.99-1.427 1.397-2.808 1.42-2.878-.032-.012-2.72-1.042-2.743-4.156z"/><path d="M11.678 2.413C12.367 1.575 12.83.433 12.7-.72c-.982.044-2.17.654-2.874 1.493-.633.733-1.184 1.912-1.035 3.039 1.094.083 2.211-.551 2.887-1.4z"/></svg>
+          Continue with Apple
+        </button>
+      </div>
+      <div class="form-divider">or sign in with email</div>
+      <div class="form-group">
+        <label class="form-label" for="login-email">Email address <span class="required">*</span></label>
+        <input id="login-email" class="form-input" type="email" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="login-pw">Password <span class="required">*</span></label>
+        <div class="input-group">
+          <input id="login-pw" class="form-input" type="password" placeholder="Your password" autocomplete="current-password"/>
+          <span class="pw-toggle" onclick="togglePw('login-pw', this)" title="Show/hide password">&#128065;</span>
+        </div>
+      </div>
+      <div class="remember-row">
+        <label class="checkbox-label"><input type="checkbox" checked/> Remember me</label>
+        <a class="forgot-link" href="#" onclick="showToast('Email sent','Password reset link sent to your inbox','info');return false;">Forgot password?</a>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="handleLogin()">Sign In</button>
+      <p style="text-align:center;margin-top:16px;font-size:0.8125rem;color:var(--chalk-dim)">
+        New to BOOMR.? <a href="#" onclick="switchLoginTab('register')" style="color:var(--ochre)">Create account</a>
+      </p>
+    </div>
+    <!-- Register form -->
+    <div id="register-form" style="display:none">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="reg-first">First name <span class="required">*</span></label>
+          <input id="reg-first" class="form-input" type="text" placeholder="First name" autocomplete="given-name"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-last">Last name <span class="required">*</span></label>
+          <input id="reg-last" class="form-input" type="text" placeholder="Last name" autocomplete="family-name"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Email address <span class="required">*</span></label>
+        <input id="reg-email" class="form-input" type="email" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reg-pw">Password <span class="required">*</span></label>
+        <div class="input-group">
+          <input id="reg-pw" class="form-input" type="password" placeholder="Min. 8 characters" autocomplete="new-password"/>
+          <span class="pw-toggle" onclick="togglePw('reg-pw', this)" title="Show/hide password">&#128065;</span>
+        </div>
+        <div class="form-hint">Must be at least 8 characters with a number.</div>
+      </div>
+      <div class="form-group">
+        <label class="checkbox-label" style="align-items:flex-start;gap:10px">
+          <input type="checkbox" style="margin-top:2px;flex-shrink:0"/>
+          <span>I agree to the <a href="#" style="color:var(--ochre)">Terms of Service</a> and <a href="#" style="color:var(--ochre)">Privacy Policy</a></span>
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" checked/>
+          <span>Send me offers, tips, and new product alerts</span>
+        </label>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="handleRegister()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CHECKOUT MODAL ===================== -->
+<div id="checkout-modal" class="modal-overlay" role="dialog" aria-label="Checkout" aria-modal="true">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeCheckout()" aria-label="Close">&#10005;</button>
+    <h2 class="modal-title">Checkout</h2>
+    <!-- Steps -->
+    <div class="checkout-steps">
+      <div class="checkout-step">
+        <div class="step-num active" id="step-1">1</div>
+        <span class="step-label active">Shipping</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="checkout-step">
+        <div class="step-num" id="step-2">2</div>
+        <span class="step-label">Payment</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="checkout-step">
+        <div class="step-num" id="step-3">3</div>
+        <span class="step-label">Review</span>
+      </div>
+    </div>
+    <div class="checkout-layout">
+      <!-- Left: Form -->
+      <div>
+        <form id="checkout-form" onsubmit="return false">
+          <!-- Contact -->
+          <div class="checkout-form-section">
+            <div class="checkout-section-title"><span class="step-badge">1</span> Contact Information</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="co-first">First name <span class="required">*</span></label>
+                <input id="co-first" class="form-input" type="text" placeholder="First name" required autocomplete="given-name"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="co-last">Last name <span class="required">*</span></label>
+                <input id="co-last" class="form-input" type="text" placeholder="Last name" required autocomplete="family-name"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="co-email">Email <span class="required">*</span></label>
+              <input id="co-email" class="form-input" type="email" placeholder="you@example.com" required autocomplete="email"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="co-phone">Phone</label>
+              <input id="co-phone" class="form-input" type="tel" placeholder="+1 (555) 000-0000" autocomplete="tel"/>
+            </div>
+          </div>
+          <!-- Shipping -->
+          <div class="checkout-form-section">
+            <div class="checkout-section-title"><span class="step-badge">2</span> Shipping Address</div>
+            <div class="form-group">
+              <label class="form-label" for="co-addr">Street address <span class="required">*</span></label>
+              <input id="co-addr" class="form-input" type="text" placeholder="123 Main Street" required autocomplete="street-address"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="co-addr2">Apartment, suite, etc.</label>
+              <input id="co-addr2" class="form-input" type="text" placeholder="Apt 4B" autocomplete="address-line2"/>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="co-city">City <span class="required">*</span></label>
+                <input id="co-city" class="form-input" type="text" placeholder="New York" required autocomplete="address-level2"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="co-zip">ZIP / Postal code <span class="required">*</span></label>
+                <input id="co-zip" class="form-input" type="text" placeholder="10001" required autocomplete="postal-code"/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="co-state">State / Province</label>
+                <input id="co-state" class="form-input" type="text" placeholder="New York" autocomplete="address-level1"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="co-country">Country <span class="required">*</span></label>
+                <select id="co-country" class="form-input form-select" required autocomplete="country">
+                  <option value="">Select country</option>
+                  <option value="US">United States</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="CA">Canada</option>
+                  <option value="AU">Australia</option>
+                  <option value="DE">Germany</option>
+                  <option value="FR">France</option>
+                  <option value="JP">Japan</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <!-- Shipping method -->
+            <div class="form-group" style="margin-top:8px">
+              <label class="form-label">Shipping Method</label>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <label class="payment-option selected" style="cursor:pointer">
+                  <input type="radio" name="shipping" value="standard" checked style="accent-color:var(--ochre)"/>
+                  <div><div class="payment-option-name">Standard (5-7 days)</div><div class="payment-option-desc">Orders over $100 ship free</div></div>
+                  <span class="payment-option-icon" style="font-size:0.9rem;font-family:var(--ff-mono)">$9.99</span>
+                </label>
+                <label class="payment-option" style="cursor:pointer">
+                  <input type="radio" name="shipping" value="express" style="accent-color:var(--ochre)"/>
+                  <div><div class="payment-option-name">Express (2-3 days)</div><div class="payment-option-desc">Tracked priority delivery</div></div>
+                  <span class="payment-option-icon" style="font-size:0.9rem;font-family:var(--ff-mono)">$19.99</span>
+                </label>
+                <label class="payment-option" style="cursor:pointer">
+                  <input type="radio" name="shipping" value="overnight" style="accent-color:var(--ochre)"/>
+                  <div><div class="payment-option-name">Overnight</div><div class="payment-option-desc">Next business day delivery</div></div>
+                  <span class="payment-option-icon" style="font-size:0.9rem;font-family:var(--ff-mono)">$34.99</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- Payment -->
+          <div class="checkout-form-section">
+            <div class="checkout-section-title"><span class="step-badge">3</span> Payment Method</div>
+            <div class="payment-method-options">
+              <div class="payment-option selected" data-method="card" onclick="selectPayment('card')">
+                <input type="radio" name="payment" checked style="accent-color:var(--ochre)"/>
+                <div><div class="payment-option-name">Credit / Debit Card</div><div class="payment-option-desc">Visa, Mastercard, Amex, Discover</div></div>
+                <span class="payment-option-icon">&#128179;</span>
+              </div>
+              <div class="payment-option" data-method="paypal" onclick="selectPayment('paypal')">
+                <input type="radio" name="payment" style="accent-color:var(--ochre)"/>
+                <div><div class="payment-option-name">PayPal</div><div class="payment-option-desc">Pay via your PayPal account</div></div>
+                <span class="payment-option-icon">&#128168;</span>
+              </div>
+              <div class="payment-option" data-method="apple" onclick="selectPayment('apple')">
+                <input type="radio" name="payment" style="accent-color:var(--ochre)"/>
+                <div><div class="payment-option-name">Apple Pay</div><div class="payment-option-desc">Touch ID or Face ID</div></div>
+                <span class="payment-option-icon">&#63743;</span>
+              </div>
+              <div class="payment-option" data-method="crypto" onclick="selectPayment('crypto')">
+                <input type="radio" name="payment" style="accent-color:var(--ochre)"/>
+                <div><div class="payment-option-name">Cryptocurrency</div><div class="payment-option-desc">BTC, ETH, USDC accepted</div></div>
+                <span class="payment-option-icon">&#8383;</span>
+              </div>
+            </div>
+            <div class="card-fields" id="card-fields">
+              <div class="form-group" style="margin-top:20px">
+                <label class="form-label" for="co-card">Card number <span class="required">*</span></label>
+                <input id="co-card" class="form-input" type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)" autocomplete="cc-number"/>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="co-expiry">Expiry date <span class="required">*</span></label>
+                  <input id="co-expiry" class="form-input" type="text" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" autocomplete="cc-exp"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="co-cvv">CVV <span class="required">*</span></label>
+                  <div class="input-group">
+                    <input id="co-cvv" class="form-input" type="password" placeholder="123" maxlength="4" autocomplete="cc-csc"/>
+                    <span class="pw-toggle" title="3 or 4 digit security code">?</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="co-name-card">Name on card <span class="required">*</span></label>
+                <input id="co-name-card" class="form-input" type="text" placeholder="Full name as on card" autocomplete="cc-name"/>
+              </div>
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" style="accent-color:var(--ochre)"/>
+                  Save card for future purchases
+                </label>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:0.8125rem;color:var(--chalk-dim)">
+            <span style="color:var(--success);font-size:1rem">&#128274;</span>
+            Your payment information is encrypted with 256-bit SSL
+          </div>
+          <button class="btn btn-primary btn-lg" style="width:100%" onclick="placeOrder()">
+            &#128274; Place Order
+          </button>
+        </form>
+      </div>
+      <!-- Right: Order summary -->
+      <div>
+        <div class="order-summary-card">
+          <div class="order-summary-title">Order Summary</div>
+          <div id="checkout-order-items"></div>
+          <div id="checkout-order-totals" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ORDER CONFIRMATION MODAL ===================== -->
+<div id="confirm-modal" class="modal-overlay" role="dialog" aria-label="Order confirmed" aria-modal="true">
+  <div class="modal" style="text-align:center">
+    <div style="width:72px;height:72px;border-radius:50%;background:rgba(61,214,140,0.15);border:2px solid var(--success);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2rem;color:var(--success)">&#10003;</div>
+    <h2 class="modal-title">Order Confirmed!</h2>
+    <p class="modal-subtitle">Thank you for your purchase. Your boomerangs are being prepared with care.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;margin:24px 0;text-align:left">
+      <div style="display:flex;justify-content:space-between;font-size:0.8125rem;margin-bottom:8px">
+        <span style="color:var(--chalk-dim)">Order number</span>
+        <span style="font-family:var(--ff-mono);color:var(--ochre)" id="order-number">#BM-000000</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.8125rem;margin-bottom:8px">
+        <span style="color:var(--chalk-dim)">Estimated delivery</span>
+        <span style="color:var(--chalk)">5-7 business days</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.8125rem">
+        <span style="color:var(--chalk-dim)">Confirmation sent to</span>
+        <span style="color:var(--chalk)" id="confirm-email">your@email.com</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-primary" onclick="closeConfirmModal(); showHome()">Continue Shopping</button>
+      <button class="btn btn-outline" onclick="showToast('Coming soon','Order tracking will be available soon','info');closeConfirmModal()">Track My Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ANNOUNCEMENT BAR ===================== -->
+<div class="announcement-bar" role="banner">
+  &#127381; Free shipping on orders over $100 &nbsp;&bull;&nbsp; Use code <strong>BOOMR20</strong> for 20% off your first order &nbsp;&bull;&nbsp; <a href="#" onclick="showShop();return false;">Shop now</a>
+  <button class="close-bar" aria-label="Close announcement">&#10005;</button>
+</div>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <a class="nav-logo" href="#" onclick="showHome();return false;" aria-label="BOOMR. home">
+    <svg class="logo-icon" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs><linearGradient id="logo-g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e8a020"/><stop offset="100%" stop-color="#b07a10"/></linearGradient></defs>
+      <path d="M6 30L18 8L30 30L26 30L18 14L10 30Z" fill="url(#logo-g)"/>
+    </svg>
+    BOOMR<span class="logo-dot">.</span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="#" onclick="showHome();return false;">Home</a></li>
+    <li><a href="#" onclick="showShop();return false;">Shop</a></li>
+    <li><a href="#categories" onclick="showHome();document.getElementById('categories')?.scrollIntoView({behavior:'smooth'});return false;">Collections</a></li>
+    <li><a href="#about" onclick="document.getElementById('about')?.scrollIntoView({behavior:'smooth'});return false;">About</a></li>
+    <li><a href="#" onclick="showToast('Coming soon','Our blog launches this summer','info');return false;">Journal</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-icon-btn" onclick="openSearch()" aria-label="Search" title="Search (Ctrl+K)">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>
+    <button class="nav-icon-btn" onclick="openLogin()" aria-label="Account">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
+    <button class="nav-icon-btn" onclick="openWishlist()" aria-label="Wishlist">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      <span class="badge wishlist-badge" style="display:none">0</span>
+    </button>
+    <button class="nav-icon-btn" onclick="openCart()" aria-label="Cart">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="badge cart-badge" style="display:none">0</span>
+    </button>
+    <button class="btn-nav-cta" onclick="showShop()">Shop Now</button>
+    <button class="hamburger" onclick="document.querySelector('.mobile-nav').classList.add('open')" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" role="dialog" aria-label="Mobile menu" aria-modal="true">
+  <button class="mobile-nav-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close menu">&#10005;</button>
+  <a href="#" onclick="showHome();document.querySelector('.mobile-nav').classList.remove('open');return false;">Home</a>
+  <a href="#" onclick="showShop();document.querySelector('.mobile-nav').classList.remove('open');return false;">Shop</a>
+  <a href="#" onclick="document.querySelector('.mobile-nav').classList.remove('open');return false;">Collections</a>
+  <a href="#" onclick="document.querySelector('.mobile-nav').classList.remove('open');return false;">About</a>
+  <a href="#" onclick="openLogin();document.querySelector('.mobile-nav').classList.remove('open');return false;">Sign In</a>
+</div>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<main id="main-content">
+
+  <!-- ========== HOMEPAGE ========== -->
+  <div id="homepage">
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-grid-lines" aria-hidden="true"></div>
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-eyebrow"><span class="dot" aria-hidden="true"></span> Precision Crafted Since 2008</div>
+          <h1 id="hero-heading" class="t-display">
+            Throw Further.<br/>
+            Return <span class="accent">Perfectly</span>.<br/>
+            <span class="outline">Every Time.</span>
+          </h1>
+          <p class="hero-desc">The world's most complete collection of handcrafted boomerangs. From traditional V-wings to exotic multi-blades, each one is engineered to return true.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary btn-lg" onclick="showShop()">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Shop All Boomerangs
+            </button>
+            <button class="btn btn-outline btn-lg" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Our Story</button>
+          </div>
+          <div class="hero-stats" role="list">
+            <div role="listitem">
+              <div class="hero-stat-num" aria-label="11 unique styles">11</div>
+              <div class="hero-stat-label">Unique Styles</div>
+            </div>
+            <div role="listitem">
+              <div class="hero-stat-num" aria-label="60 plus countries shipped">60+</div>
+              <div class="hero-stat-label">Countries Shipped</div>
+            </div>
+            <div role="listitem">
+              <div class="hero-stat-num" aria-label="14000 plus happy throwers">14k+</div>
+              <div class="hero-stat-label">Happy Throwers</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-orbit"></div>
+        <div class="hero-orbit-2"></div>
+        <img class="hero-boomerang-svg" src="images/ui/hero-boomerang.png" alt="BOOMR. signature boomerang" loading="eager" fetchpriority="high" draggable="false"/>
+      </div>
+    </section>
+
+    <!-- Ticker -->
+    <div class="ticker-wrap" aria-hidden="true">
+      <div class="ticker">
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Free Returns</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> 30-Day Guarantee</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Ships to 60+ Countries</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Handcrafted Quality</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Use Code BOOMR20</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Carbon Fiber, Wood, Foam</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Competition Grade</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Free Returns</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> 30-Day Guarantee</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Ships to 60+ Countries</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Handcrafted Quality</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Use Code BOOMR20</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Carbon Fiber, Wood, Foam</span>
+        <span class="ticker-item"><span class="ti-dot">&#9679;</span> Competition Grade</span>
+      </div>
+    </div>
+
+    <!-- Features strip -->
+    <div class="features-strip">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-item reveal">
+            <div class="feature-icon" aria-hidden="true">&#128230;</div>
+            <div>
+              <div class="feature-title">Free Shipping $100+</div>
+              <div class="feature-desc">Express and overnight options available worldwide.</div>
+            </div>
+          </div>
+          <div class="feature-item reveal reveal-delay-1">
+            <div class="feature-icon" aria-hidden="true">&#8617;&#65039;</div>
+            <div>
+              <div class="feature-title">30-Day Returns</div>
+              <div class="feature-desc">Full refund on unused items, no questions asked.</div>
+            </div>
+          </div>
+          <div class="feature-item reveal reveal-delay-2">
+            <div class="feature-icon" aria-hidden="true">&#128274;</div>
+            <div>
+              <div class="feature-title">Secure Payments</div>
+              <div class="feature-desc">256-bit SSL encryption on every transaction.</div>
+            </div>
+          </div>
+          <div class="feature-item reveal reveal-delay-3">
+            <div class="feature-icon" aria-hidden="true">&#127942;</div>
+            <div>
+              <div class="feature-title">Expert Craftsmanship</div>
+              <div class="feature-desc">2,000+ test throws before each product ships.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deal of the Day -->
+    <section class="section deal-section" aria-labelledby="deal-heading">
+      <div class="container">
+        <div class="deal-wrapper">
+          <div class="reveal">
+            <div class="deal-badge" aria-label="Deal of the day">&#9889; Deal of the Day</div>
+            <h2 id="deal-heading" class="deal-title t-display">Riddle Curve QM<br/>Limited Offer</h2>
+            <p class="deal-desc">The question-mark shaped boomerang with polymer flex technology. Watch it loop and spiral mid-flight before returning perfectly to your hand. Advanced aerodynamics, beginner-friendly feel.</p>
+            <div class="deal-price">
+              <span class="now" aria-label="Now 89 dollars 99 cents">$89.99</span>
+              <span class="was" aria-label="Was 109 dollars 99 cents">$109.99</span>
+              <span class="save-tag">SAVE 18%</span>
+            </div>
+            <div class="countdown" aria-label="Time remaining for this deal">
+              <div class="countdown-unit">
+                <div class="countdown-num" id="cd-h" aria-live="polite">00</div>
+                <div class="countdown-label">Hours</div>
+              </div>
+              <div class="countdown-sep" aria-hidden="true">:</div>
+              <div class="countdown-unit">
+                <div class="countdown-num" id="cd-m" aria-live="polite">00</div>
+                <div class="countdown-label">Mins</div>
+              </div>
+              <div class="countdown-sep" aria-hidden="true">:</div>
+              <div class="countdown-unit">
+                <div class="countdown-num" id="cd-s" aria-live="polite">00</div>
+                <div class="countdown-label">Secs</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <button class="btn btn-primary btn-lg" id="deal-add-btn">Add to Cart</button>
+              <button class="btn btn-outline btn-lg" onclick="showProduct(3)">View Details</button>
+            </div>
+          </div>
+          <div class="deal-image-wrapper reveal reveal-delay-2">
+            <div id="deal-img" style="width:80%;position:relative;z-index:1"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="section" id="categories" aria-labelledby="categories-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">Browse by style</span>
+          <h2 id="categories-heading" class="section-title t-display">Shop By Category</h2>
+          <p class="section-desc">From micro indoor throwers to expert-level competition grade, we cover every style of boomerang flight.</p>
+          <div class="divider" aria-hidden="true"></div>
+        </div>
+        <div class="grid-3" id="category-grid"></div>
+      </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="section section-dark" aria-labelledby="featured-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">Hand-picked</span>
+          <h2 id="featured-heading" class="section-title t-display">Featured Boomerangs</h2>
+          <p class="section-desc">Our team's current favourites for performance, beauty, and sheer throwing joy.</p>
+          <div class="divider" aria-hidden="true"></div>
+        </div>
+        <div class="products-grid" id="featured-grid"></div>
+        <div style="text-align:center;margin-top:40px">
+          <button class="btn btn-outline btn-lg" onclick="showShop()">View All 11 Boomerangs</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand story -->
+    <section class="section brand-story" id="about" aria-labelledby="story-heading">
+      <div class="container">
+        <div class="brand-story-grid">
+          <div class="story-text reveal">
+            <span class="section-eyebrow">Our Story</span>
+            <h2 id="story-heading" class="story-title t-display">Obsessed With the Return.</h2>
+            <p class="story-body">BOOMR. started in a garage in 2008 when founder Lena Thorvald threw her first boomerang on a beach in Darwin, Australia, and watched it disappear over the dunes never to return. She spent the next two years learning why, studying aerodynamics, testing 300 hand-cut prototypes, and eventually throwing one that came back and hit her square in the palm.</p>
+            <p class="story-body">Today, every BOOMR. product goes through our 2,000-throw test programme before it reaches you. We work with professional competition throwers, aerospace engineers, and indigenous elders to ensure each design honours the craft while pushing its limits.</p>
+            <div style="display:flex;gap:32px;margin-top:32px" role="list">
+              <div role="listitem">
+                <div style="font-family:var(--ff-display);font-weight:800;font-size:2rem;color:var(--ochre);line-height:1">16</div>
+                <div style="font-size:0.8rem;color:var(--chalk-dim);margin-top:4px">Years of craft</div>
+              </div>
+              <div role="listitem">
+                <div style="font-family:var(--ff-display);font-weight:800;font-size:2rem;color:var(--ochre);line-height:1">300+</div>
+                <div style="font-size:0.8rem;color:var(--chalk-dim);margin-top:4px">Prototypes tested</div>
+              </div>
+              <div role="listitem">
+                <div style="font-family:var(--ff-display);font-weight:800;font-size:2rem;color:var(--ochre);line-height:1">11</div>
+                <div style="font-size:0.8rem;color:var(--chalk-dim);margin-top:4px">Signature designs</div>
+              </div>
+            </div>
+          </div>
+          <div class="story-visual reveal reveal-delay-2">
+            <img class="story-big-boomerang" src="images/ui/brand-story.png" alt="Handcrafted boomerang" loading="lazy" draggable="false"/>
+            <div class="story-accent-card" aria-hidden="true">
+              <div class="accent-card-num">4.8/5</div>
+              <div class="accent-card-label">Average customer rating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section" aria-labelledby="testimonials-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">Customer reviews</span>
+          <h2 id="testimonials-heading" class="section-title t-display">What Throwers Say</h2>
+          <div class="divider" aria-hidden="true"></div>
+        </div>
+        <div class="testimonials-grid">
+          <article class="testimonial-card reveal">
+            <div class="testimonial-stars" aria-label="5 stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+            </div>
+            <p class="testimonial-text">"I've thrown boomerangs for 12 years and BOOMR. is the only brand I now recommend to everyone. The Classic V-Wing Pro returns within inches every single throw."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true" style="background:rgba(232,160,32,0.2);color:var(--ochre)">JK</div>
+              <div>
+                <div class="author-name">Jordan Kim</div>
+                <div class="author-sub">World Ranking Competitor, Seoul</div>
+              </div>
+            </div>
+          </article>
+          <article class="testimonial-card reveal reveal-delay-1">
+            <div class="testimonial-stars" aria-label="5 stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+            </div>
+            <p class="testimonial-text">"Bought the Indoor Micro Float for my 8-year-old. She's been throwing it around the living room every evening for two months. Zero wall damage, constant smiles."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true" style="background:rgba(91,156,246,0.2);color:var(--info)">AM</div>
+              <div>
+                <div class="author-name">Amara Mensah</div>
+                <div class="author-sub">Parent, London</div>
+              </div>
+            </div>
+          </article>
+          <article class="testimonial-card reveal reveal-delay-2">
+            <div class="testimonial-stars" aria-label="5 stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+            </div>
+            <p class="testimonial-text">"The Halo Ring Glider is a masterpiece. Watching it float through the air is like watching a frisbee and a boomerang have a beautiful child. Stunning flight."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true" style="background:rgba(61,214,140,0.2);color:var(--success)">FR</div>
+              <div>
+                <div class="author-name">Felix Rodrigues</div>
+                <div class="author-sub">Outdoor Enthusiast, Lisbon</div>
+              </div>
+            </div>
+          </article>
+          <article class="testimonial-card reveal reveal-delay-1">
+            <div class="testimonial-stars" aria-label="4 stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star empty">&#9733;</span>
+            </div>
+            <p class="testimonial-text">"Ordered three different boomerangs as gifts. The packaging was beautiful, delivery was fast, and each one performed exactly as described. Will order again."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true" style="background:rgba(232,85,85,0.2);color:var(--danger)">SL</div>
+              <div>
+                <div class="author-name">Sophie Laurent</div>
+                <div class="author-sub">Gift Buyer, Paris</div>
+              </div>
+            </div>
+          </article>
+          <article class="testimonial-card reveal reveal-delay-2">
+            <div class="testimonial-stars" aria-label="5 stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+            </div>
+            <p class="testimonial-text">"The Tri-Blade Vortex is absolutely insane. The hang-time it generates before returning is unlike any boomerang I've ever thrown. You can watch it hover."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true" style="background:rgba(232,160,32,0.2);color:var(--ochre)">DW</div>
+              <div>
+                <div class="author-name">Dylan Walsh</div>
+                <div class="author-sub">Competition Thrower, Sydney</div>
+              </div>
+            </div>
+          </article>
+          <article class="testimonial-card reveal reveal-delay-3">
+            <div class="testimonial-stars" aria-label="5 stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+            </div>
+            <p class="testimonial-text">"Customer service is exceptional. Had a question about wind conditions for the Delta Storm and they connected me with a pro thrower who gave me personal tips. Incredible."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true" style="background:rgba(91,156,246,0.2);color:var(--info)">NA</div>
+              <div>
+                <div class="author-name">Nadia Al-Rashid</div>
+                <div class="author-sub">Beginner Thrower, Dubai</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shipping section -->
+    <section class="section-sm">
+      <div class="shipping-section">
+        <div class="section-header" style="margin-bottom:24px">
+          <span class="section-eyebrow">Worldwide delivery</span>
+          <h2 class="section-title t-display" style="font-size:1.75rem">We Ship Everywhere</h2>
+          <p class="section-desc" style="font-size:0.875rem">From Darwin to Denmark, your boomerang arrives safely.</p>
+        </div>
+        <div class="shipping-countries" role="list" aria-label="Countries we ship to">
+          <span class="country-tag" role="listitem">&#127482;&#127480; USA</span>
+          <span class="country-tag" role="listitem">&#127468;&#127463; UK</span>
+          <span class="country-tag" role="listitem">&#127462;&#127482; Australia</span>
+          <span class="country-tag" role="listitem">&#127464;&#127462; Canada</span>
+          <span class="country-tag" role="listitem">&#127465;&#127466; Germany</span>
+          <span class="country-tag" role="listitem">&#127467;&#127479; France</span>
+          <span class="country-tag" role="listitem">&#127471;&#127477; Japan</span>
+          <span class="country-tag" role="listitem">&#127472;&#127479; South Korea</span>
+          <span class="country-tag" role="listitem">&#127463;&#127479; Brazil</span>
+          <span class="country-tag" role="listitem">&#127474;&#127485; Mexico</span>
+          <span class="country-tag" role="listitem">&#127470;&#127481; Italy</span>
+          <span class="country-tag" role="listitem">&#127466;&#127480; Spain</span>
+          <span class="country-tag" role="listitem">&#127475;&#127484; New Zealand</span>
+          <span class="country-tag" role="listitem">&#127480;&#127466; Sweden</span>
+          <span class="country-tag" role="listitem">&#127475;&#127476; Norway</span>
+          <span class="country-tag" role="listitem">&#127465;&#127472; Denmark</span>
+          <span class="country-tag" role="listitem">&#127486;&#127480; South Africa</span>
+          <span class="country-tag" role="listitem">&#127470;&#127475; India</span>
+          <span class="country-tag" role="listitem">+ 42 more</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="section-sm">
+      <div class="newsletter-section reveal" aria-labelledby="newsletter-heading">
+        <span class="section-eyebrow">Join the community</span>
+        <h2 id="newsletter-heading" class="section-title t-display">Throw Together.</h2>
+        <p class="section-desc">Get early access to new boomerangs, exclusive discounts, and flight tips from our pros. No spam, ever. Unsubscribe anytime.</p>
+        <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+          <input type="email" class="newsletter-input" placeholder="Enter your email address" required aria-label="Email address for newsletter"/>
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+        <p style="font-size:0.75rem;color:var(--chalk-dim);margin-top:12px">Join 8,400+ throwers. No spam. Unsubscribe anytime.</p>
+      </div>
+    </section>
+
+  </div><!-- end homepage -->
+
+  <!-- ========== SHOP PAGE ========== -->
+  <div id="shop-page" style="display:none"></div>
+
+  <!-- ========== PRODUCT PAGE ========== -->
+  <div id="product-page" style="display:none"></div>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="nav-logo" href="#" onclick="showHome();return false;" aria-label="BOOMR. home">
+          <svg class="logo-icon" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs><linearGradient id="fl-g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e8a020"/><stop offset="100%" stop-color="#b07a10"/></linearGradient></defs>
+            <path d="M6 30L18 8L30 30L26 30L18 14L10 30Z" fill="url(#fl-g)"/>
+          </svg>
+          BOOMR<span class="logo-dot">.</span>
+        </a>
+        <p class="footer-brand-desc">The world's most complete collection of precision-crafted boomerangs. Engineered for the perfect return since 2008.</p>
+        <div class="social-links" aria-label="Social media links">
+          <a href="#" class="social-link" onclick="showToast('Follow us','@boomrofficial on all platforms','info');return false;" aria-label="Instagram">&#128247;</a>
+          <a href="#" class="social-link" onclick="showToast('Follow us','@boomrofficial on all platforms','info');return false;" aria-label="YouTube">&#127909;</a>
+          <a href="#" class="social-link" onclick="showToast('Follow us','@boomrofficial on all platforms','info');return false;" aria-label="Twitter / X">&#120143;</a>
+          <a href="#" class="social-link" onclick="showToast('Follow us','@boomrofficial on all platforms','info');return false;" aria-label="TikTok">&#127925;</a>
+        </div>
+        <div class="payment-icons" aria-label="Accepted payment methods">
+          <div class="payment-icon" title="Visa">VISA</div>
+          <div class="payment-icon" title="Mastercard">MC</div>
+          <div class="payment-icon" title="American Express">AMEX</div>
+          <div class="payment-icon" title="PayPal">PP</div>
+          <div class="payment-icon" title="Apple Pay">&#63743;Pay</div>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Shop</div>
+        <nav class="footer-links" aria-label="Shop links">
+          <a href="#" onclick="showShop();return false;">All Boomerangs</a>
+          <a href="#" onclick="showShop();filterCategory('v-shaped');return false;">Traditional V-Wing</a>
+          <a href="#" onclick="showShop();filterCategory('indoor');return false;">Indoor Boomerangs</a>
+          <a href="#" onclick="showShop();filterCategory('ring');return false;">Ring Boomerangs</a>
+          <a href="#" onclick="showShop();filterCategory('bat');return false;">Novelty Collection</a>
+          <a href="#" onclick="showShop();sortProducts('price-asc');return false;">Under $50</a>
+          <a href="#" onclick="showShop();sortProducts('rating');return false;">Best Sellers</a>
+          <a href="#" onclick="showShop();filterCategory('multi-wing');return false;">Competition Grade</a>
+        </nav>
+      </div>
+      <div>
+        <div class="footer-col-title">Support</div>
+        <nav class="footer-links" aria-label="Support links">
+          <a href="#" onclick="showToast('Help Center','Opens in a new tab','info');return false;">Help Center</a>
+          <a href="#" onclick="showToast('Contact','support@boomr.co','info');return false;">Contact Us</a>
+          <a href="#" onclick="showToast('Shipping','Details on every product page','info');return false;">Shipping Info</a>
+          <a href="#" onclick="showToast('Returns','30 days, free label','info');return false;">Returns & Exchanges</a>
+          <a href="#" onclick="showToast('Warranty','1-year manufacturer warranty','info');return false;">Warranty</a>
+          <a href="#" onclick="showToast('Size Guide','Opening size guide...','info');return false;">Size Guide</a>
+          <a href="#" onclick="showToast('Track','Enter order number at checkout','info');return false;">Track Your Order</a>
+        </nav>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <nav class="footer-links" aria-label="Company links">
+          <a href="#" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'});showHome();return false;">Our Story</a>
+          <a href="#" onclick="showToast('Careers','No open positions currently','info');return false;">Careers</a>
+          <a href="#" onclick="showToast('Press','press@boomr.co','info');return false;">Press</a>
+          <a href="#" onclick="showToast('Affiliates','Coming soon','info');return false;">Affiliate Program</a>
+          <a href="#" onclick="showToast('Wholesale','wholesale@boomr.co','info');return false;">Wholesale</a>
+          <a href="#" onclick="showToast('Journal','Coming summer 2025','info');return false;">Journal</a>
+        </nav>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&#169; 2025 BOOMR. All rights reserved.</div>
+      <div class="footer-legal">
+        <a href="#" onclick="showToast('Privacy Policy','Available at boomr.co/privacy','info');return false;">Privacy Policy</a>
+        <a href="#" onclick="showToast('Terms','Available at boomr.co/terms','info');return false;">Terms of Service</a>
+        <a href="#" onclick="showToast('Cookies','Preferences saved','success');return false;">Cookie Preferences</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to top -->
+<button id="scroll-top" aria-label="Scroll to top">&#8593;</button>
+
+<script src="js/main.js"></script>
+<script>
+// Extra helpers not in main.js
+
+function handleLogin() {
+  const email = document.getElementById('login-email')?.value;
+  const pw = document.getElementById('login-pw')?.value;
+  if (!email || !pw) { showToast('Missing fields','Please enter email and password','error'); return; }
+  closeLogin();
+  showToast('Welcome back!','You are now signed in to BOOMR.','success');
+}
+
+function handleRegister() {
+  const first = document.getElementById('reg-first')?.value;
+  const email = document.getElementById('reg-email')?.value;
+  const pw = document.getElementById('reg-pw')?.value;
+  if (!first || !email || !pw) { showToast('Missing fields','Please fill all required fields','error'); return; }
+  if (pw.length < 8) { showToast('Weak password','Password must be at least 8 characters','error'); return; }
+  closeLogin();
+  showToast('Account created!','Welcome to BOOMR. Use code BOOMR20 for 20% off','success', 4000);
+}
+
+function handleNewsletter(e) {
+  e.preventDefault();
+  showToast('You\'re in!','Welcome to the BOOMR. community. Check your inbox.','success');
+  e.target.reset();
+}
+
+function togglePw(id, el) {
+  const input = document.getElementById(id);
+  if (!input) return;
+  if (input.type === 'password') { input.type = 'text'; el.textContent = '&#128066;'; }
+  else { input.type = 'password'; el.textContent = '&#128065;'; }
+}
+
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+
+function formatExpiry(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,4);
+  if (v.length > 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+  el.value = v;
+}
+
+// Order number generation
+document.addEventListener('DOMContentLoaded', () => {
+  const orderNum = '#BM-' + Math.floor(100000 + Math.random() * 900000);
+  const el = document.getElementById('order-number');
+  if (el) el.textContent = orderNum;
+});
+
+// Live search as user types
+document.addEventListener('DOMContentLoaded', () => {
+  const si = document.getElementById('search-input');
+  const sr = document.getElementById('search-results');
+  if (!si || !sr) return;
+  si.addEventListener('input', () => {
+    const q = si.value.trim().toLowerCase();
+    if (!q || q.length < 2) { sr.innerHTML = ''; return; }
+    const hits = products.filter(p =>
+      p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.tags.some(t => t.includes(q))
+    ).slice(0, 6);
+    sr.innerHTML = hits.map(p => `
+      <div onclick="closeSearch(); showProduct(${p.id})" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:var(--transition)" onmouseover="this.style.borderColor='var(--ochre)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--surface);border-radius:var(--r-sm);flex-shrink:0">${getSVG(p.svgKey,'32px')}</div>
+        <div>
+          <div style="font-family:var(--ff-display);font-weight:700;font-size:0.8125rem;color:var(--chalk)">${p.name}</div>
+          <div style="font-size:0.75rem;color:var(--ochre);font-family:var(--ff-mono)">$${p.price.toFixed(2)}</div>
+        </div>
+      </div>
+    `).join('');
+  });
+});
+
+// Shipping method visual toggle
+document.addEventListener('click', e => {
+  const opt = e.target.closest('[name="shipping"]');
+  if (opt) {
+    document.querySelectorAll('#checkout-modal .payment-option').forEach(el => {
+      const radio = el.querySelector('[name="shipping"]');
+      if (radio) el.classList.toggle('selected', radio === opt);
+    });
+  }
+});
+</script>
+</body>
+</html>
